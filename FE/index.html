@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="flex h-screen bg-white relative">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-100 h-full p-4 flex flex-col relative">
+        <div class="flex items-center space-x-2 mb-6">
+            <button class="p-2 rounded-md hover:bg-gray-200">
+                <img src="image/menu.png" alt="Menu Icon" class="w-5 h-5">
+            </button>
+        </div>
+
+        <div class="absolute top-4 right-4 flex space-x-3">
+            <img src="image/search.png" alt="Search Icon" class="w-5 h-5">
+            <img src="image/pen.png" alt="Edit Icon" class="w-5 h-5">
+        </div>
+
+        <div class="mb-4 mt-12">
+            <p class="font-bold">Hôm qua</p>
+            <p class="text-gray-500 text-sm">Mô tả bạn đã nhập</p>
+        </div>
+        <div>
+            <p class="font-bold">2 ngày trước</p>
+            <p class="text-gray-500 text-sm">Mô tả bạn đã nhập</p>
+        </div>
+    </div>
+
+<!-- Main content -->
+<div class="flex-1 flex flex-col items-center justify-center relative">
+    <!-- Tiêu đề ChatGPT-->
+    <div class="absolute top-4 left-6 flex items-center space-x-2 text-gray-800 font-bold text-lg">
+        <span>ChatGPT</span>
+        <!-- <span class="text-gray-500">▼</span>-->
+        <span class="text-gray-500">&#9660;</span>
+    </div>
+
+    <div class="h-full pt-20 text-center w-full max-w-3xl">
+        <h1  id="welcome-text" class="text-2xl font-bold mb-6">Tôi có thể giúp gì cho bạn ?</h1>
+
+    <div id="chat-container" class="mt-6 space-y-4 max-h-[80%] overflow-y-auto px-2 pb-20"></div>
+ 
+
+        <div class="absolute bottom-[25px] max-w-3xl w-full h-16 border rounded-full shadow-lg px-4 py-2 bg-white flex items-center space-x-2">
+            <!-- Dropdown -->
+            <div class="relative">
+                <button onclick="toggleMenu()" class="flex w-full items-center px-3 py-1  bg-white text-sm text-gray-700 ">
+                    <span id="dropdown-label" data-type="content">Nội dung</span>
+                    <!-- <span id="dropdown-label" data-type="test">Test API</span> -->
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+        
+                <!-- Menu dropdown -->
+                <div id="options-menu" class="absolute left-0 top-10 w-40 bg-white border rounded-xl shadow-xl text-left text-sm hidden z-10">
+                    <div class="flex flex-col divide-y divide-gray-200">
+                        <button onclick="selectResponseType('Hình ảnh', 'image')"  class="px-4 py-2 hover:bg-gray-100 text-left">Hình ảnh</button>
+                        <button onclick="selectResponseType('Slogan', 'slogan')"  class="px-4 py-2 hover:bg-gray-100 text-left">Slogan</button>
+                        <button onclick="selectResponseType('Nội dung','content' )" data-type="content" class="px-4 py-2 hover:bg-gray-100 text-left">Nội dung</button>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Ô nhập -->
+            <input
+                id="message-input"
+                type="text"
+                placeholder="Hãy nhập mô tả của bạn"
+                class=" flex-1 border-none focus:outline-none text-gray-600 placeholder-gray-400 bg-transparent"
+            />
+        
+            <!-- Nút gửi -->
+            <img src="image/send.png" alt="Gửi"
+                class="w-6 h-6 cursor-pointer"
+                onclick="sendMessage()"
+            />
+        </div>
+        
+
+
+
+        <!-- Nút đăng nhập/đăng ký -->
+        <div class="absolute top-6 right-6">
+            <div class="w-10 h-10 bg-orange-500 text-white flex items-center justify-center rounded-full font-bold">
+                GM
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="index.js"></script>
+
+</html>
