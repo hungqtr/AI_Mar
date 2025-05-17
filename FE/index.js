@@ -60,6 +60,7 @@ function sendMessage() {
     // Xóa input
     input.value = '';
 
+    //4.6.1.13	WebUI xử lý URL và hiển thị hình ảnh lên cho người dùng.
     fetch(`${baseUrl}/${type}/`, {
         method: 'POST',
         headers: {
@@ -79,6 +80,7 @@ function sendMessage() {
             `;
         } else {
             // Trường hợp phản hồi là văn bản bình thường
+            //4.6.1.8.4	Hiển thị lỗi lên Web UI.
             const rawText = data.data.replace(/\n/g, '<br>');
             botMsg.innerHTML = `
                 <div class="inline-block bg-gray-100 text-gray-900 px-4 py-2 rounded-2xl">
