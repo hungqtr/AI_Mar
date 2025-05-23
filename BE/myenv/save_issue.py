@@ -7,16 +7,17 @@ import logging
 import requests
 import boto3
 import psycopg2
-
+from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+from typing import Optional, List
+from uuid import UUID, uuid4
+from datetime import datetime, timezone
 
 # Load biến môi trường
 load_dotenv()
-
 
 # Khởi tạo logger
 logger = logging.getLogger("uvicorn")
@@ -26,17 +27,20 @@ handler.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 logger.debug("Logger initialized successfully")
 
-
 # Hàm kết nối PostgreSQL
 def get_db_connection():
-    return psycopg2.connect(
-        host=os.getenv("POSTGRES_HOST", "localhost"),
-        port=int(os.getenv("POSTGRES_PORT", 5432)),
-        database=os.getenv("POSTGRES_DB", "cnpm"),
-        user=os.getenv("POSTGRES_USER", "postgres"),
-        password=os.getenv("POSTGRES_PASSWORD", "123")
-    )
-
+    try:
+        conn = psycopg2.connect(
+            host=os.getenv("POSTGRES_HOST", "47.84.52.44"),
+            port=int(os.getenv("POSTGRES_PORT", 5433)),
+            database=os.getenv("POSTGRES_DB", "aimar"),
+            user=os.getenv("POSTGRES_USER", "myuser"),
+            password=os.getenv("POSTGRES_PASSWORD", "Password1!")
+        )
+        return conn
+    except Exception as e:
+        logger.error(f"Không kết nối được tới DB: {e}")
+        raise
 
 # Khởi tạo FastAPI và cấu hình CORS
 app = FastAPI()
@@ -45,23 +49,34 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Cho phép tất cả domain
     allow_credentials=True,
-    allow_methods=["*"],  # Cho phép tất cả phương thức
-    allow_headers=["*"],  # Cho phép tất cả header
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-
-# Model nhận dữ liệu đăng ký
+# Models
 class UserRegister(BaseModel):
     username: str
     email: str
     password: str
 
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
-# Model nhận dữ liệu prompt cho các API khác
 class Request(BaseModel):
     prompt: str
 
+class SubIssueCreate(BaseModel):
+    prompt: str
+    response: Optional[str] = None
+    imageURL: Optional[str] = None
 
+class IssueCreate(BaseModel):
+    title: str
+    user_id: UUID
+    sub_issues: List[SubIssueCreate] = []
+
+# Hàm băm mật khẩu
 def hash_password(password: str) -> str:
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(password.encode(), salt).decode()
@@ -69,90 +84,106 @@ def hash_password(password: str) -> str:
 def check_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode(), hashed.encode())
 
-
 # API đăng ký user
 @app.post("/register/")
 async def register_user(user: UserRegister):
     try:
-        # Băm mật khẩu
         hashed_password = hash_password(user.password)
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Kiểm tra username hoặc email đã tồn tại
+                cur.execute("SELECT id FROM users WHERE username = %s OR email = %s", (user.username, user.email))
+                if cur.fetchone():
+                    raise HTTPException(status_code=400, detail="Tên người dùng hoặc email đã tồn tại.")
 
-        # Kết nối DB
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        # Kiểm tra username hoặc email đã tồn tại
-        cur.execute("SELECT id FROM users WHERE username = %s OR email = %s", (user.username, user.email))
-        existing_user = cur.fetchone()
-        if existing_user:
-            raise HTTPException(status_code=400, detail="Tên người dùng hoặc email đã tồn tại.")
-
-        # Thêm user mới vào DB
-        cur.execute(
-            """
-            INSERT INTO users (username, email, password, created_at)
-            VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
-            """,
-            (user.username, user.email, hashed_password)
-        )
-        conn.commit()
+                # Thêm user mới vào DB
+                cur.execute(
+                    """
+                    INSERT INTO users (username, email, password, created_at)
+                    VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
+                    """,
+                    (user.username, user.email, hashed_password)
+                )
+                conn.commit()
         return {"message": "Đăng ký thành công!"}
-
     except psycopg2.Error as db_error:
         logger.error(f"PostgreSQL error: {db_error}")
-        conn.rollback()
         raise HTTPException(status_code=500, detail="Lỗi hệ thống cơ sở dữ liệu.")
-
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Lỗi trong quá trình đăng ký: {e}")
         raise HTTPException(status_code=500, detail="Đã xảy ra lỗi trong quá trình đăng ký.")
-
-    finally:
-        try:
-            cur.close()
-            conn.close()
-        except Exception:
-            pass
-
-# Model cho login
-class UserLogin(BaseModel):
-    username: str
-    password: str
 
 # API đăng nhập user
 @app.post("/login/")
 async def login_user(user: UserLogin):
     try:
-        conn = get_db_connection()
-        cur = conn.cursor()
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT password FROM users WHERE username = %s", (user.username,))
+                result = cur.fetchone()
+                if not result:
+                    raise HTTPException(status_code=401, detail="Tên đăng nhập không tồn tại.")
+                hashed_password = result[0]
 
-        # Truy vấn thông tin người dùng
-        cur.execute("SELECT password FROM users WHERE username = %s", (user.username,))
-        result = cur.fetchone()
-
-        if result is None:
-            raise HTTPException(status_code=401, detail="Tên đăng nhập không tồn tại.")
-
-        hashed_password = result[0]
-
-        # So sánh mật khẩu
-        if not check_password(user.password, hashed_password):
-            raise HTTPException(status_code=401, detail="Mật khẩu không chính xác.")
-
+                if not check_password(user.password, hashed_password):
+                    raise HTTPException(status_code=401, detail="Mật khẩu không chính xác.")
         return {"message": "Đăng nhập thành công!"}
-
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Lỗi khi đăng nhập: {e}")
         raise HTTPException(status_code=500, detail="Lỗi hệ thống trong quá trình đăng nhập.")
 
-    finally:
-        try:
-            cur.close()
-            conn.close()
-        except:
-            pass
+# API tạo issue và sub_issue
+@app.post("/issue/")
+async def create_issue(issue: IssueCreate):
+    issue_uuid = uuid4()
+    created_at = datetime.now(timezone.utc)
 
-# Hàm tạo slogan từ prompt
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Insert issue
+                cur.execute(
+                    "INSERT INTO issue (id, title, user_id, created_at) VALUES (%s, %s, %s, %s)",
+                    (str(issue_uuid), issue.title, str(issue.user_id), created_at)
+                )
+
+                # Insert sub_issues, nếu có
+                if issue.sub_issues:
+                    sub_issue_values = []
+                    for sub in issue.sub_issues:
+                        sub_uuid = uuid4()
+                        sub_issue_values.append((
+                            str(sub_uuid),
+                            str(issue.user_id),
+                            str(issue_uuid),
+                            sub.prompt,
+                            sub.response,
+                            sub.imageURL,
+                            created_at
+                        ))
+
+                    execute_values(
+                        cur,
+                        """
+                        INSERT INTO sub_issue (id, user_id, issue_id, prompt, response, imageURL, created_at)
+                        VALUES %s
+                        """,
+                        sub_issue_values
+                    )
+                conn.commit()
+
+        return {"message": "Lưu thành công!", "issue_id": str(issue_uuid)}
+
+    except Exception as e:
+        logger.error(f"Lỗi khi insert issue hoặc sub_issue: {e}")
+        raise HTTPException(status_code=500, detail=f"Lỗi: {str(e)}")
+
+# Các hàm sinh slogan, content, ảnh và các API liên quan giữ nguyên, vì chúng không liên quan tới DB.
+
 def generate_slogan(prompt: str) -> str:
     response = requests.post(
         url="https://openrouter.ai/api/v1/chat/completions",
@@ -252,12 +283,10 @@ def generate_image(prompt: str) -> str:
     else:
         return f"❌ Error {response.status_code}: {response.text}"
 
-
 # API test đơn giản
 @app.post("/test/")
 async def test_api():
     return {"data": "Hello, I'm AImar "}
-
 
 # API tạo slogan
 @app.post("/slogan/")
@@ -268,7 +297,6 @@ async def generate_slogan_api(request: Request):
         raise HTTPException(status_code=400, detail=slogan)
     return {"data": slogan}
 
-
 # API tạo content
 @app.post("/content/")
 async def generate_content_api(request: Request):
@@ -278,7 +306,6 @@ async def generate_content_api(request: Request):
     if "Error" in content:
         raise HTTPException(status_code=400, detail=content)
     return {"data": content}
-
 
 # API tạo ảnh
 @app.post("/image/")
