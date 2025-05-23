@@ -117,7 +117,7 @@ function sendMessage() {
     type = document.getElementById('dropdown-label').getAttribute('data-type');
 
     if (welcomeText) {
-        welcomeText.remove(); // hoặc welcomeText.style.display = 'none';
+        welcomeText.remove();
     }
 
     const input = document.querySelector('input[type="text"]');
@@ -131,6 +131,14 @@ function sendMessage() {
     userMsg.innerHTML = `<div class="inline-block bg-blue-100 text-blue-900 px-4 py-2 rounded-2xl">${message}</div>`;
     chatContainer.appendChild(userMsg);
 
+    // Thêm spinner loading
+    const loadingMsg = document.createElement('div');
+    loadingMsg.className = 'text-left';
+    loadingMsg.id = 'loading-spinner';
+    loadingMsg.innerHTML = `<div class="inline-block bg-gray-100 px-4 py-2 rounded-2xl"><div class="loading-spinner"></div></div>`;
+    chatContainer.appendChild(loadingMsg);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
     // Xóa input
     input.value = '';
 
@@ -143,12 +151,17 @@ function sendMessage() {
     })
         .then(response => response.json())
         .then(data => {
+            // Xóa spinner loading
+            const spinner = document.getElementById('loading-spinner');
+            if (spinner) spinner.remove();
+
             const botMsg = document.createElement('div');
             botMsg.className = 'text-left';
             if (typeof data.data === 'string' && data.data.startsWith('http') && data.data.match(/\.(jpeg|jpg|gif|png|webp)$/)) {
                 botMsg.innerHTML = `
                 <div class="inline-block bg-gray-100 px-4 py-2 rounded-2xl">
                     <img src="${data.data}" alt="Generated Image" class="max-w-xs rounded-lg">
+                    <button class="download-btn" onclick="downloadImage('${data.data}', 'generated_image.png')">Tải xuống</button>
                 </div>
             `;
             } else {
@@ -164,6 +177,10 @@ function sendMessage() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         })
         .catch(error => {
+            // Xóa spinner loading
+            const spinner = document.getElementById('loading-spinner');
+            if (spinner) spinner.remove();
+
             console.error('Lỗi khi gọi API:', error);
             const botMsg = document.createElement('div');
             botMsg.className = 'text-left';
