@@ -97,6 +97,21 @@ function selectResponseType(content, type) {
     toggleMenu(); // Ẩn dropdown
 }
 
+// Hàm tải hình ảnh về máy
+function downloadImage(url, filename) {
+    fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename || 'generated_image.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+        .catch(error => console.error('Lỗi khi tải hình ảnh:', error));
+}
+
 function sendMessage() {
     const welcomeText = document.getElementById('welcome-text');
     type = document.getElementById('dropdown-label').getAttribute('data-type');
