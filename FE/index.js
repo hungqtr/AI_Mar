@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-
+// 1.1.3.	Gọi index.js để gửi mô tả đến generate_image_api.
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('message-input');
     input.addEventListener('keydown', function (event) {
@@ -155,8 +155,7 @@ function sendMessage() {
     input.value = '';
     const user_id = localStorage.getItem('id') || null ;
 
-
-    //  3.1.3 Web UI gửi promtp đến API endpoint http://47.84.52.44:8000/content.
+    //1.1.4.	Index.js gửi mô tả đến generate_image_api (http://47.84.52.44:8000/Image).
     fetch(`${baseUrl}/${type}/`, {
         method: 'POST',
         headers: {
@@ -169,7 +168,7 @@ function sendMessage() {
         })
     })
 
-        // 3.1.11 Web UI xử lý nhận và hiển thị nội dung lên cho người dùng.
+        //1.1.15    index.js xử lý URL và hiển thị lên index.html
         .then(response => response.json())
         .then(data => {
             // Xóa spinner loading
@@ -186,6 +185,7 @@ function sendMessage() {
                 </div>
             `;
             } else {
+                 //1.4.2. generate_image_api trả về lỗi cho index.js.
                 // Trường hợp phản hồi là văn bản bình thường
                 const rawText = data.data.content.replace(/\n/g, '<br>');
                 botMsg.innerHTML = `
@@ -194,6 +194,7 @@ function sendMessage() {
                 </div>
             `;
             }
+            //1.4.3. index.js xử lý lỗi và hiển thị lên index.html
             chatContainer.appendChild(botMsg);
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
