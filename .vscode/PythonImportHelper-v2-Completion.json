@@ -1,0 +1,484 @@
+[
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "boto3",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "boto3",
+        "description": "boto3",
+        "detail": "boto3",
+        "documentation": {}
+    },
+    {
+        "label": "uuid",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "uuid",
+        "description": "uuid",
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "UUID",
+        "importPath": "uuid",
+        "description": "uuid",
+        "isExtraImport": true,
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "uuid4",
+        "importPath": "uuid",
+        "description": "uuid",
+        "isExtraImport": true,
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "bcrypt",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "bcrypt",
+        "description": "bcrypt",
+        "detail": "bcrypt",
+        "documentation": {}
+    },
+    {
+        "label": "psycopg2",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "execute_values",
+        "importPath": "psycopg2.extras",
+        "description": "psycopg2.extras",
+        "isExtraImport": true,
+        "detail": "psycopg2.extras",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "Request",
+        "kind": 6,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "class Request(BaseModel):\n  prompt: str\n@app.post(\"/test/\")\nasync def generate_slogan_api():\n    return {\"data\": \"Hello, I'm AImar \"}\n@app.post(\"/slogan/\")\nasync def generate_slogan_api( request: Request):\n    prompt =  request.prompt\n    slogan = generate_slogan(prompt)\n    if \"Error\" in slogan:",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "generate_slogan",
+        "kind": 2,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "def generate_slogan(prompt):\n  response = requests.post(\n  url=\"https://openrouter.ai/api/v1/chat/completions\",\n  headers={\n    \"Authorization\": \"Bearer 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\",\n    \"Content-Type\": \"application/json\",\n  },\n  data=json.dumps({\n    \"model\": \"deepseek/deepseek-chat:free\",\n    \"messages\": [",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "generate_content",
+        "kind": 2,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "def generate_content(prompt):\n  response = requests.post(\n  url=\"https://openrouter.ai/api/v1/chat/completions\",\n  headers={\n    \"Authorization\": \"Bearer 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\",\n    \"Content-Type\": \"application/json\",\n  },\n  data=json.dumps({\n    \"model\": \"deepseek/deepseek-chat:free\",\n    \"messages\": [",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "generate_image",
+        "kind": 2,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "def generate_image(prompt):\n    url = \"https://ir-api.myqa.cc/v1/openai/images/generations\"\n    headers = {\n        \"Authorization\": \"Bearer f710984a37f3e81d39ff9efdee2d3150bce926a16a920e22bfc32a9098ca9c58\",\n        \"Content-Type\": \"application/json\"\n    }\n    payload = {\n        \"prompt\": prompt,\n        \"model\": \"black-forest-labs/FLUX-1-schnell:free\"\n    }",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "upload_base64_to_s3",
+        "kind": 2,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "def upload_base64_to_s3(base64_data, bucket_name, region_name='ap-southeast-1'):\n    image_data = base64.b64decode(base64_data)\n    filename = f\"CNPM/image_{uuid.uuid4().hex}.png\"\n    s3 = boto3.client(\n    's3',\n    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),\n    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),\n    region_name=os.getenv('AWS_DEFAULT_REGION')\n)\n    s3.put_object(",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "app = FastAPI()\nload_dotenv()\nlogger = logging.getLogger(\"uvicorn\")\nlogger.setLevel(logging.DEBUG)  # Set mức độ log, có thể là INFO, DEBUG, ERROR, ...\n# Handler để ghi log vào terminal hoặc file\nhandler = logging.StreamHandler()\nhandler.setLevel(logging.DEBUG)\nlogger.addHandler(handler)\n# Bạn có thể sử dụng logger trong mã\nlogger.debug(\"Logger initialized successfully\")",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "logger = logging.getLogger(\"uvicorn\")\nlogger.setLevel(logging.DEBUG)  # Set mức độ log, có thể là INFO, DEBUG, ERROR, ...\n# Handler để ghi log vào terminal hoặc file\nhandler = logging.StreamHandler()\nhandler.setLevel(logging.DEBUG)\nlogger.addHandler(handler)\n# Bạn có thể sử dụng logger trong mã\nlogger.debug(\"Logger initialized successfully\")\napp.add_middleware( \n    CORSMiddleware,",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "handler",
+        "kind": 5,
+        "importPath": "BE.myenv.app",
+        "description": "BE.myenv.app",
+        "peekOfCode": "handler = logging.StreamHandler()\nhandler.setLevel(logging.DEBUG)\nlogger.addHandler(handler)\n# Bạn có thể sử dụng logger trong mã\nlogger.debug(\"Logger initialized successfully\")\napp.add_middleware( \n    CORSMiddleware,\n    allow_origins=[\"*\"],  # Cho phép tất cả các domain\n    allow_credentials=True,\n    allow_methods=[\"*\"],  # Cho phép tất cả các phương thức (GET, POST, v.v.)",
+        "detail": "BE.myenv.app",
+        "documentation": {}
+    },
+    {
+        "label": "generate_image",
+        "kind": 2,
+        "importPath": "BE.myenv.render_img_from_prompt",
+        "description": "BE.myenv.render_img_from_prompt",
+        "peekOfCode": "def generate_image(prompt):\n    #4.6.1.5\tChuẩn bị request để gửi yêu cầu đến ImageRouter\n    url = \"https://ir-api.myqa.cc/v1/openai/images/generations\"\n    headers = {\n        \"Authorization\": \"Bearer f710984a37f3e81d39ff9efdee2d3150bce926a16a920e22bfc32a9098ca9c58\",\n        \"Content-Type\": \"application/json\"\n    }\n    payload = {\n        \"prompt\": prompt,\n        \"model\": \"black-forest-labs/FLUX-1-schnell:free\"",
+        "detail": "BE.myenv.render_img_from_prompt",
+        "documentation": {}
+    },
+    {
+        "label": "upload_base64_to_s3",
+        "kind": 2,
+        "importPath": "BE.myenv.render_img_from_prompt",
+        "description": "BE.myenv.render_img_from_prompt",
+        "peekOfCode": "def upload_base64_to_s3(base64_data, bucket_name, region_name='ap-southeast-1'):\n    # 4.6.1.9.1\tGiải mã chuỗi Base64.\n    image_data = base64.b64decode(base64_data)\n    # 4.6.1.9.2\tTạo tên file\n    filename = f\"CNPM/image_{uuid.uuid4().hex}.png\"\n    # 4.6.1.9.3\tKhởi tạo S3 Client\n    s3 = boto3.client(\n    's3',\n    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),\n    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),",
+        "detail": "BE.myenv.render_img_from_prompt",
+        "documentation": {}
+    },
+    {
+        "label": "UserRegister",
+        "kind": 6,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "class UserRegister(BaseModel):\n    username: str\n    email: str\n    password: str\nclass UserLogin(BaseModel):\n    username: str\n    password: str\nclass Request(BaseModel):\n    prompt: str\nclass SubIssueCreate(BaseModel):",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "UserLogin",
+        "kind": 6,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "class UserLogin(BaseModel):\n    username: str\n    password: str\nclass Request(BaseModel):\n    prompt: str\nclass SubIssueCreate(BaseModel):\n    prompt: str\n    response: Optional[str] = None\n    imageURL: Optional[str] = None\nclass IssueCreate(BaseModel):",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "Request",
+        "kind": 6,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "class Request(BaseModel):\n    prompt: str\nclass SubIssueCreate(BaseModel):\n    prompt: str\n    response: Optional[str] = None\n    imageURL: Optional[str] = None\nclass IssueCreate(BaseModel):\n    title: str\n    user_id: UUID\n    sub_issues: List[SubIssueCreate] = []",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "SubIssueCreate",
+        "kind": 6,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "class SubIssueCreate(BaseModel):\n    prompt: str\n    response: Optional[str] = None\n    imageURL: Optional[str] = None\nclass IssueCreate(BaseModel):\n    title: str\n    user_id: UUID\n    sub_issues: List[SubIssueCreate] = []\n# Hàm băm mật khẩu\ndef hash_password(password: str) -> str:",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "IssueCreate",
+        "kind": 6,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "class IssueCreate(BaseModel):\n    title: str\n    user_id: UUID\n    sub_issues: List[SubIssueCreate] = []\n# Hàm băm mật khẩu\ndef hash_password(password: str) -> str:\n    salt = bcrypt.gensalt()\n    return bcrypt.hashpw(password.encode(), salt).decode()\ndef check_password(password: str, hashed: str) -> bool:\n    return bcrypt.checkpw(password.encode(), hashed.encode())",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "get_db_connection",
+        "kind": 2,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "def get_db_connection():\n    try:\n        conn = psycopg2.connect(\n            host=os.getenv(\"POSTGRES_HOST\", \"47.84.52.44\"),\n            port=int(os.getenv(\"POSTGRES_PORT\", 5433)),\n            database=os.getenv(\"POSTGRES_DB\", \"aimar\"),\n            user=os.getenv(\"POSTGRES_USER\", \"myuser\"),\n            password=os.getenv(\"POSTGRES_PASSWORD\", \"Password1!\")\n        )\n        return conn",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "hash_password",
+        "kind": 2,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "def hash_password(password: str) -> str:\n    salt = bcrypt.gensalt()\n    return bcrypt.hashpw(password.encode(), salt).decode()\ndef check_password(password: str, hashed: str) -> bool:\n    return bcrypt.checkpw(password.encode(), hashed.encode())\n# API đăng ký user\n@app.post(\"/register/\")\nasync def register_user(user: UserRegister):\n    try:\n        hashed_password = hash_password(user.password)",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "check_password",
+        "kind": 2,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "def check_password(password: str, hashed: str) -> bool:\n    return bcrypt.checkpw(password.encode(), hashed.encode())\n# API đăng ký user\n@app.post(\"/register/\")\nasync def register_user(user: UserRegister):\n    try:\n        hashed_password = hash_password(user.password)\n        with get_db_connection() as conn:\n            with conn.cursor() as cur:\n                # Kiểm tra username hoặc email đã tồn tại",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "generate_slogan",
+        "kind": 2,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "def generate_slogan(prompt: str) -> str:\n    response = requests.post(\n        url=\"https://openrouter.ai/api/v1/chat/completions\",\n        headers={\n            \"Authorization\": \"Bearer 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\",\n            \"Content-Type\": \"application/json\",\n        },\n        data=json.dumps({\n            \"model\": \"deepseek/deepseek-chat:free\",\n            \"messages\": [",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "generate_content",
+        "kind": 2,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "def generate_content(prompt: str) -> str:\n    response = requests.post(\n        url=\"https://openrouter.ai/api/v1/chat/completions\",\n        headers={\n            \"Authorization\": \"Bearer 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\",\n            \"Content-Type\": \"application/json\",\n        },\n        data=json.dumps({\n            \"model\": \"deepseek/deepseek-chat:free\",\n            \"messages\": [",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "upload_base64_to_s3",
+        "kind": 2,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "def upload_base64_to_s3(base64_data: str, bucket_name: str, region_name: str = 'ap-southeast-1') -> str:\n    image_data = base64.b64decode(base64_data)\n    filename = f\"CNPM/image_{uuid.uuid4().hex}.png\"\n    s3 = boto3.client(\n        's3',\n        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),\n        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),\n        region_name=os.getenv('AWS_DEFAULT_REGION', region_name)\n    )\n    s3.put_object(",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "generate_image",
+        "kind": 2,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "def generate_image(prompt: str) -> str:\n    url = \"https://ir-api.myqa.cc/v1/openai/images/generations\"\n    headers = {\n        \"Authorization\": \"Bearer f710984a37f3e81d39ff9efdee2d3150bce926a16a920e22bfc32a9098ca9c58\",\n        \"Content-Type\": \"application/json\"\n    }\n    payload = {\n        \"prompt\": prompt,\n        \"model\": \"black-forest-labs/FLUX-1-schnell:free\"\n    }",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "logger = logging.getLogger(\"uvicorn\")\nlogger.setLevel(logging.DEBUG)\nhandler = logging.StreamHandler()\nhandler.setLevel(logging.DEBUG)\nlogger.addHandler(handler)\nlogger.debug(\"Logger initialized successfully\")\n# Hàm kết nối PostgreSQL\ndef get_db_connection():\n    try:\n        conn = psycopg2.connect(",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "handler",
+        "kind": 5,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "handler = logging.StreamHandler()\nhandler.setLevel(logging.DEBUG)\nlogger.addHandler(handler)\nlogger.debug(\"Logger initialized successfully\")\n# Hàm kết nối PostgreSQL\ndef get_db_connection():\n    try:\n        conn = psycopg2.connect(\n            host=os.getenv(\"POSTGRES_HOST\", \"47.84.52.44\"),\n            port=int(os.getenv(\"POSTGRES_PORT\", 5433)),",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "BE.myenv.save_issue",
+        "description": "BE.myenv.save_issue",
+        "peekOfCode": "app = FastAPI()\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],  # Cho phép tất cả domain\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n# Models\nclass UserRegister(BaseModel):",
+        "detail": "BE.myenv.save_issue",
+        "documentation": {}
+    }
+]
