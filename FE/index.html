@@ -84,7 +84,7 @@
                 class="absolute bottom-[25px] max-w-3xl w-full h-16 border rounded-full shadow-lg px-4 py-2 bg-white flex items-center space-x-2">
                 <!-- Dropdown -->
                 <div class="relative">
-                    <button onclick="toggleMenu()"
+                    <button id="plus-button" onclick="toggleMenu()"
                         class="flex w-full items-center px-3 py-1  bg-white text-sm text-gray-700 ">
                         <span id="dropdown-label" data-type="content">Nội dung</span>
                         <!-- <span id="dropdown-label" data-type="test">Test API</span> -->
@@ -104,6 +104,9 @@
                                 class="px-4 py-2 hover:bg-gray-100 text-left">Slogan</button>
                             <button onclick="selectResponseType('Nội dung','content' )" data-type="content"
                                 class="px-4 py-2 hover:bg-gray-100 text-left">Nội dung</button>
+
+                             <button onclick="selectResponseType('Test API','test' )" data-type="content"
+                                class="px-4 py-2 hover:bg-gray-100 text-left">test</button>
                         </div>
                     </div>
                 </div>
