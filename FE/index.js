@@ -1,4 +1,5 @@
-const baseUrl = 'http://47.84.52.44:8000';
+// const baseUrl = 'http://47.84.52.44:8000';
+const baseUrl = 'http://localhost:8000';
 
 document.getElementById('btnLogin').addEventListener('click', function () {
     window.location.href = 'login.html';
@@ -94,7 +95,7 @@ function selectResponseType(content, type) {
     labelSpan = document.getElementById('dropdown-label');
     labelSpan.innerText = content;
     labelSpan.setAttribute('data-type', type);
-    toggleMenu(); // Ẩn dropdown
+    toggleMenu(); 
 }
 
 // Hàm tải hình ảnh về máy
@@ -142,6 +143,8 @@ function sendMessage() {
     // Xóa input
     input.value = '';
 
+
+        //  3.1.3 Web UI gửi promtp đến API endpoint http://47.84.52.44:8000/content.
     fetch(`${baseUrl}/${type}/`, {
         method: 'POST',
         headers: {
@@ -149,6 +152,9 @@ function sendMessage() {
         },
         body: JSON.stringify({ prompt: message })
     })
+
+        // 3.1.11 Web UI xử lý nhận và hiển thị nội dung lên cho người dùng.
+
         .then(response => response.json())
         .then(data => {
             // Xóa spinner loading

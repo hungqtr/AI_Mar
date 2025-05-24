@@ -47,7 +47,7 @@ async def generate_slogan_api():
 
 
 
-@app.post("/slogan/")
+@app.post("/slogan/") # 'http://47.84.52.44:8000/slogan'
 async def generate_slogan_api( request: Request):
     prompt =  request.prompt
     slogan = generate_slogan(prompt)
@@ -82,7 +82,7 @@ def generate_slogan(prompt):
   response = requests.post(
   url="https://openrouter.ai/api/v1/chat/completions",
   headers={
-    "Authorization": "Bearer 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",
+    "Authorization": "Bearer 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",
     "Content-Type": "application/json",
   },
   data=json.dumps({
@@ -98,18 +98,13 @@ def generate_slogan(prompt):
   if response.status_code == 200:
     result = response.json()
     return result["choices"][0]["message"]["content"]
-  # if True:
-  #   return "Timeless Innovation, Unmatched Elegance."
-  # else:
-  #   return f"❌ Error {response.status_code}: {response.text}"
-
 
 
 def generate_content(prompt):
   response = requests.post(
   url="https://openrouter.ai/api/v1/chat/completions",
   headers={
-    "Authorization": "Bearer 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",
+    "Authorization": "Bearer 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",
     "Content-Type": "application/json",
   },
   data=json.dumps({
@@ -127,18 +122,6 @@ def generate_content(prompt):
     return result["choices"][0]["message"]["content"]
   else:
     return f"❌ Error {response.status_code}: {response.text}"
-
-#   if True: 
-#      return   """    
-#     Tiêu đề:** *MacBook Pro M4 – Đỉnh Cao Công Nghệ, Hiệu Suất Vượt Trội* \n **Nội dung:** 
-#     - **Chip M4 mới nhất**: Hiệu năng cực đỉnh, xử lý mượt mà mọi tác vụ từ đồ họa, chỉnh sửa video đến lập trình.  
-#     - **Thiết kế siêu mỏng và sang trọng**: Đẳng cấp Apple với vỏ kim loại nguyên khối, đẹp từng chi tiết.  
-#     - **Màn hình Liquid Retina XDR**: Trải nghiệm hình ảnh sống động, màu sắc chính xác tuyệt đối.  
-#     - **Pin siêu trâu, sạc nhanh**: Làm việc cả ngày không lo hết pin.  
-#     - **Bảo mật tối ưu**: Cảm biến vân tay Touch ID tích hợp, an toàn tuyệt đối.  
-# """
-#   else:
-#     return f"❌ Error {response.status_code}: {response.text}"
 
 
 
