@@ -144,7 +144,7 @@ async def create_issue(issue: IssueCreate):
 
     try:
         with get_db_connection() as conn:
-            with conn.cursor() as cur:
+            with conn.cursor() as cur: 
                 # Insert issue
                 cur.execute(
                     "INSERT INTO issue (id, title, user_id, created_at) VALUES (%s, %s, %s, %s)",

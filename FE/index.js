@@ -1,5 +1,7 @@
 // const baseUrl = 'http://47.84.52.44:8000';
 const baseUrl = 'http://localhost:8000';
+let currentIssueId = null;
+
 
 document.getElementById('btnLogin').addEventListener('click', function () {
     window.location.href = 'login.html';
@@ -10,8 +12,9 @@ document.getElementById('btnRegister').addEventListener('click', function () {
 });
 
 // Kiểm tra đăng nhập
-const username = localStorage.getItem('loggedInUser');
-if (username) {
+const user_id = localStorage.getItem('id');
+const username = localStorage.getItem('username');
+if (user_id) {
     // Ẩn nút đăng nhập/đăng ký
     document.getElementById('authButtons').classList.add('hidden');
 
@@ -56,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Xử lý đăng xuất
     btnLogout.addEventListener('click', function () {
-        localStorage.removeItem('loggedInUser');
+        localStorage.clear();
         location.reload();
     });
 });
@@ -150,15 +153,20 @@ function sendMessage() {
 
     // Xóa input
     input.value = '';
+    const user_id = localStorage.getItem('id') || null ;
 
 
-        //  3.1.3 Web UI gửi promtp đến API endpoint http://47.84.52.44:8000/content.
+    //  3.1.3 Web UI gửi promtp đến API endpoint http://47.84.52.44:8000/content.
     fetch(`${baseUrl}/${type}/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: message })
+        body: JSON.stringify({
+            prompt: message,
+            user_id: user_id,
+            issue_id: currentIssueId
+        })
     })
 
         // 3.1.11 Web UI xử lý nhận và hiển thị nội dung lên cho người dùng.
@@ -170,16 +178,16 @@ function sendMessage() {
 
             const botMsg = document.createElement('div');
             botMsg.className = 'text-left';
-            if (typeof data.data === 'string' && data.data.startsWith('http') && data.data.match(/\.(jpeg|jpg|gif|png|webp)$/)) {
+            if (typeof data.data.content === 'string' && data.data.content.startsWith('http') && data.data.content.match(/\.(jpeg|jpg|gif|png|webp)$/)) {
                 botMsg.innerHTML = `
                 <div class="inline-block bg-gray-100 px-4 py-2 rounded-2xl">
-                    <img src="${data.data}" alt="Generated Image" class="max-w-xs rounded-lg">
-                    <button class="download-btn" onclick="downloadImage('${data.data}', 'generated_image.png')">Tải xuống</button>
+                    <img src="${data.data.content}" alt="Generated Image" class="max-w-xs rounded-lg">
+                    <button class="download-btn" onclick="downloadImage('${data.data.content}', 'generated_image.png')">Tải xuống</button>
                 </div>
             `;
             } else {
                 // Trường hợp phản hồi là văn bản bình thường
-                const rawText = data.data.replace(/\n/g, '<br>');
+                const rawText = data.data.content.replace(/\n/g, '<br>');
                 botMsg.innerHTML = `
                 <div class="inline-block bg-gray-100 text-gray-900 px-4 py-2 rounded-2xl">
                     ${rawText}
@@ -188,6 +196,11 @@ function sendMessage() {
             }
             chatContainer.appendChild(botMsg);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+
+             if (data.data.issue_id && !currentIssueId) {
+                currentIssueId = data.data.issue_id;
+                console.log('Đã lưu issue_id:', currentIssueId);
+                }
         })
         .catch(error => {
             // Xóa spinner loading
