@@ -1,5 +1,5 @@
-// const baseUrl = 'http://47.84.52.44:8000';
-const baseUrl = 'http://localhost:8000';
+const baseUrl = 'http://47.84.52.44:8000';
+// const baseUrl = 'http://localhost:8000';
 let currentIssueId = null;
 
 
