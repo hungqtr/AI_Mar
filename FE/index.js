@@ -1,4 +1,5 @@
-const baseUrl = 'http://47.84.52.44:8000';
+// const baseUrl = 'http://47.84.52.44:8000';
+const baseUrl = 'http://localhost:8000';
 
 
 
@@ -35,7 +36,7 @@ function selectResponseType(content, type ) {
     labelSpan=  document.getElementById('dropdown-label');
     labelSpan.innerText = content;
     labelSpan.setAttribute('data-type', type);
-    toggleMenu(); // Ẩn dropdown
+    toggleMenu(); 
 }
 
 function sendMessage() {
@@ -43,7 +44,7 @@ function sendMessage() {
     type=  document.getElementById('dropdown-label').getAttribute('data-type');
 
     if (welcomeText) {
-        welcomeText.remove(); // hoặc welcomeText.style.display = 'none';
+        welcomeText.remove();  
     }
 
     const input = document.querySelector('input[type="text"]');
@@ -60,6 +61,8 @@ function sendMessage() {
     // Xóa input
     input.value = '';
 
+
+        //  3.1.3 Web UI gửi promtp đến API endpoint http://47.84.52.44:8000/content.
     fetch(`${baseUrl}/${type}/`, {
         method: 'POST',
         headers: {
@@ -68,6 +71,9 @@ function sendMessage() {
         body: JSON.stringify({ prompt: message })
     })
     .then(response => response.json())
+
+
+    // 3.1.11 Web UI xử lý nhận và hiển thị nội dung lên cho người dùng.
     .then(data => {
         const botMsg = document.createElement('div');
         botMsg.className = 'text-left';
@@ -78,7 +84,6 @@ function sendMessage() {
                 </div>
             `;
         } else {
-            // Trường hợp phản hồi là văn bản bình thường
             const rawText = data.data.replace(/\n/g, '<br>');
             botMsg.innerHTML = `
                 <div class="inline-block bg-gray-100 text-gray-900 px-4 py-2 rounded-2xl">
