@@ -111,8 +111,7 @@ async def generate_content_api(request: Request):
  # Người dùng chưa đăng nhập => không cần lưu
     if (not user_id and not issue_id):
 
-      # content = generate_content(prompt)
-      content = prompt
+      content = generate_content(prompt)
 
       if "Error" in content:
         response = Response(
@@ -143,8 +142,7 @@ async def generate_content_api(request: Request):
 
     create_sub_issue(conn, issue_id, prompt, "text", "user")
     
-    # content = generate_content(prompt)
-    content = (prompt)
+    content = generate_content(prompt)
 
     if "Error"  in content:
         response = Response(
