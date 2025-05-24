@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             event.preventDefault();
+            // console.log("enterd")
             sendMessage();
         }
     });
@@ -80,6 +81,10 @@ function toggleMenu() {
     const menu = document.getElementById('options-menu');
     const plusBtn = document.getElementById('plus-button');
 
+    if (!menu || !plusBtn) {
+        console.error('Không tìm thấy options-menu hoặc plus-button');
+        return;
+    }
     menu.classList.toggle('hidden');
 
     // Thêm hoặc gỡ class bg-gray-200 để làm sẫm màu
@@ -114,6 +119,9 @@ function downloadImage(url, filename) {
 }
 
 function sendMessage() {
+
+    console.log('sendMessage called');
+
     const welcomeText = document.getElementById('welcome-text');
     type = document.getElementById('dropdown-label').getAttribute('data-type');
 
@@ -154,7 +162,6 @@ function sendMessage() {
     })
 
         // 3.1.11 Web UI xử lý nhận và hiển thị nội dung lên cho người dùng.
-
         .then(response => response.json())
         .then(data => {
             // Xóa spinner loading

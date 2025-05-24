@@ -47,14 +47,31 @@ async def generate_slogan_api():
 
 
 
-@app.post("/slogan/") # 'http://47.84.52.44:8000/slogan'
-async def generate_slogan_api( request: Request):
-    prompt =  request.prompt
-    slogan = generate_slogan(prompt)
-    if "Error" in slogan:
-        raise HTTPException(status_code=400, detail=slogan)
-    return {"data": slogan}
+# @app.post("/slogan/") # 'http://47.84.52.44:8000/slogan'
+# async def generate_slogan_api( request: Request):
+#     prompt =  request.prompt
+#     slogan = generate_slogan(prompt)
+#     if "Error" in slogan:
+#         raise HTTPException(status_code=400, detail=slogan)
+#     return {"data": slogan}
 
+#     except Exception as e:
+#     logger.error(f"Lỗi trong /slogan/: {e}")
+#         raise HTTPException(status_code=500, detail="Lỗi phía server")
+
+
+@app.post("/slogan/")
+async def generate_slogan_api(request: Request):
+    
+      prompt = request.prompt
+      logger.debug(f"Prompt for content: {prompt}")
+
+      slogan = generate_slogan(prompt)
+      if "Error" in slogan:
+          raise HTTPException(status_code=400, detail=slogan)
+      return {"data": slogan}
+    
+    
 
 @app.post("/content/")
 async def generate_content_api(request: Request):
@@ -79,10 +96,11 @@ async def generate_image_api( request: Request):
 
 
 def generate_slogan(prompt):
+  key=os.getenv('OR_KEY')
   response = requests.post(
   url="https://openrouter.ai/api/v1/chat/completions",
   headers={
-    "Authorization": "Bearer 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",
+    "Authorization": "Bearer "+key,
     "Content-Type": "application/json",
   },
   data=json.dumps({
@@ -98,13 +116,16 @@ def generate_slogan(prompt):
   if response.status_code == 200:
     result = response.json()
     return result["choices"][0]["message"]["content"]
+  else:
+   return f"❌ Error {response.status_code}: {response.text}"
 
 
 def generate_content(prompt):
+  key=os.getenv('OR_KEY')
   response = requests.post(
   url="https://openrouter.ai/api/v1/chat/completions",
   headers={
-    "Authorization": "Bearer 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",
+    "Authorization": "Bearer "+key ,
     "Content-Type": "application/json",
   },
   data=json.dumps({
@@ -119,6 +140,7 @@ def generate_content(prompt):
   )
   if response.status_code == 200:
     result = response.json()
+    logger.error(result)
     return result["choices"][0]["message"]["content"]
   else:
     return f"❌ Error {response.status_code}: {response.text}"
@@ -127,9 +149,10 @@ def generate_content(prompt):
 
 
 def generate_image(prompt):
+    key=os.getenv('OI_KEY')
     url = "https://ir-api.myqa.cc/v1/openai/images/generations"
     headers = {
-        "Authorization": "Bearer f710984a37f3e81d39ff9efdee2d3150bce926a16a920e22bfc32a9098ca9c58",
+        "Authorization": "Bearer "+key ,
         "Content-Type": "application/json"
     }
     payload = {
