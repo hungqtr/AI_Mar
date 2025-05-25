@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const avatarBtn = document.getElementById('avatarBtn');
     const btnLogout = document.getElementById('btnLogout');
 
-    // Hiển thị avatar nếu đã đăng nhập
+    // 4.1.0 Người dùng đang ở trang index.html có header trạng thái login thành công.
     if (loggedInUser) {
         avatar.classList.remove('hidden');
         if (authButtons) authButtons.classList.add('hidden');
@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // 1.1.3.	Gọi index.js để gửi mô tả đến generate_image_api.
+// 4.1.3 File index.js sẽ gọi hàm sendMessage() 
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('message-input');
     input.addEventListener('keydown', function (event) {
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// Sự kiện ấn nút tùy chọn
+// 4.1.1 Người dùng chọn chức năng (Hình ảnh / Nội dung / Slogan).
 function toggleMenu() {
     const menu = document.getElementById('options-menu');
     const plusBtn = document.getElementById('plus-button');
@@ -136,14 +137,14 @@ function sendMessage() {
     const message = input.value.trim();
     if (message === '') return;
 
-    // Hiển thị tin nhắn người dùng
+    // 4.1.3.2 Hiển thị mô tả đã nhập của người dùng (prompt) lên giao diện (phía bên phải của chat-container) trong trang index.html
     const chatContainer = document.getElementById('chat-container');
     const userMsg = document.createElement('div');
     userMsg.className = 'text-right';
     userMsg.innerHTML = `<div class="inline-block bg-blue-100 text-blue-900 px-4 py-2 rounded-2xl">${message}</div>`;
     chatContainer.appendChild(userMsg);
 
-    // Thêm spinner loading
+    // 4.1.6 Hiển thị nội dung phản hồi (text hoặc hình ảnh) lên (phía bên trái của chat-container) của trang index.html
     const loadingMsg = document.createElement('div');
     loadingMsg.className = 'text-left';
     loadingMsg.id = 'loading-spinner';
@@ -156,6 +157,7 @@ function sendMessage() {
     const user_id = localStorage.getItem('id') || null ;
 
     //1.1.4.	Index.js gửi mô tả đến generate_image_api (http://47.84.52.44:8000/Image).
+    // 4.1.3.1 Gửi POST request đến API tương ứng (/content, /slogan, /image) kèm theo dữ liệu của prompt, user_id, issue_id (nếu có).
     fetch(`${baseUrl}/${type}/`, {
         method: 'POST',
         headers: {
@@ -169,6 +171,7 @@ function sendMessage() {
     })
 
         //1.1.15    index.js xử lý URL và hiển thị lên index.html
+        // 4.1.5 Trang index.html nhận kết quả phản hồi từ save_issue.py (FastAPI).
         .then(response => response.json())
         .then(data => {
             // Xóa spinner loading

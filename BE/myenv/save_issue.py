@@ -7,14 +7,11 @@ import logging
 import requests
 import boto3
 import psycopg2
-from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional, List
-from uuid import UUID, uuid4
-from datetime import datetime, timezone
+from typing import Optional
 
 # Load biến môi trường
 load_dotenv()
@@ -27,17 +24,20 @@ handler.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 logger.debug("Logger initialized successfully")
 
-# Hàm kết nối PostgreSQL
+# 4.1.4 Kết nối DB thành công
 def get_db_connection():
     try:
         conn = psycopg2.connect(
-            host=os.getenv("POSTGRES_HOST", "47.84.52.44"),
-            port=int(os.getenv("POSTGRES_PORT", 5433)),
-            database=os.getenv("POSTGRES_DB", "aimar"),
-            user=os.getenv("POSTGRES_USER", "myuser"),
-            password=os.getenv("POSTGRES_PASSWORD", "Password1!")
+            host=os.getenv("POSTGRES_HOST"),
+            port=int(os.getenv("POSTGRES_PORT")),
+            database=os.getenv("POSTGRES_DB"),
+            user=os.getenv("POSTGRES_USER"),
+            password=os.getenv("POSTGRES_PASSWORD")
         )
+        print("Kết nối thành công!")
         return conn
+
+    #4.3.1 Nếu hệ thống không kết nối được đến cơ sở dữ liệu ở bước 4.1.2, hệ thống hiển thị thông báo lỗi “Không kết nối được tới DB”.
     except Exception as e:
         logger.error(f"Không kết nối được tới DB: {e}")
         raise
@@ -65,16 +65,36 @@ class UserLogin(BaseModel):
 
 class Request(BaseModel):
     prompt: str
+    user_id: Optional[int]
+    issue_id: Optional[int]
+
+class Response(BaseModel):
+    code: int
+    message: str
+    data: object 
 
 class SubIssueCreate(BaseModel):
     prompt: str
     response: Optional[str] = None
     imageURL: Optional[str] = None
 
-class IssueCreate(BaseModel):
+class User(BaseModel):
+    id: int
+    username: str
+    email: str
+    password: str
+    
+class Issues(BaseModel):
+    id: int
     title: str
-    user_id: UUID
-    sub_issues: List[SubIssueCreate] = []
+    user_id: int
+
+class SubIssue(BaseModel):
+    id: int
+    issue_id: int
+    type: str
+    content: str
+    owner: str
 
 # Hàm băm mật khẩu
 def hash_password(password: str) -> str:
@@ -136,54 +156,235 @@ async def login_user(user: UserLogin):
         logger.error(f"Lỗi khi đăng nhập: {e}")
         raise HTTPException(status_code=500, detail="Lỗi hệ thống trong quá trình đăng nhập.")
 
-# API tạo issue và sub_issue
-@app.post("/issue/")
-async def create_issue(issue: IssueCreate):
-    issue_uuid = uuid4()
-    created_at = datetime.now(timezone.utc)
+# API test đơn giản
+@app.post("/test/")
+async def test_api():
+    return {"data": "Hello, I'm AImar "}
 
-    try:
-        with get_db_connection() as conn:
-            with conn.cursor() as cur: 
-                # Insert issue
-                cur.execute(
-                    "INSERT INTO issue (id, title, user_id, created_at) VALUES (%s, %s, %s, %s)",
-                    (str(issue_uuid), issue.title, str(issue.user_id), created_at)
-                )
+# API tạo slogan
+@app.post("/slogan/")
+async def generate_slogan_api(request: Request):
+    prompt =  request.prompt
+    user_id = request.user_id
+    issue_id = request.issue_id
+    conn = get_db_connection() 
+    issue : Issues
 
-                # Insert sub_issues, nếu có
-                if issue.sub_issues:
-                    sub_issue_values = []
-                    for sub in issue.sub_issues:
-                        sub_uuid = uuid4()
-                        sub_issue_values.append((
-                            str(sub_uuid),
-                            str(issue.user_id),
-                            str(issue_uuid),
-                            sub.prompt,
-                            sub.response,
-                            sub.imageURL,
-                            created_at
-                        ))
 
-                    execute_values(
-                        cur,
-                        """
-                        INSERT INTO sub_issue (id, user_id, issue_id, prompt, response, imageURL, created_at)
-                        VALUES %s
-                        """,
-                        sub_issue_values
-                    )
-                conn.commit()
+# 4.2.1 Nếu người dùng chưa đăng nhập và chưa có issue (user_id == null và issue_id == null)
+    if (not user_id and not issue_id):
+      # 4.2.1.1 Gọi hàm xử lý tạo slogan
+      slogan = generate_slogan(prompt)
 
-        return {"message": "Lưu thành công!", "issue_id": str(issue_uuid)}
+      # 4.4.1 Nếu kết quả trả về ở bước 4.2.1.1 chứa chuỗi “Error” hoặc lỗi tương tự thì trả về 400 Bad Request và hiển thị thông báo lỗi lên trang index.html
+      if "Error" in slogan:
+        response = Response(
+        code=400,
+        message='failed',
+        data={}
+        ) 
+        return response
+        
+      # 4.2.1.2 Trả về kết quả nội dung slogan với status 200 OK và issue_id trả về là null.
+      response = Response(
+        code=200,
+        message='success',
+        data={
+            "content": slogan,
+            "issue_id": None
+            }
+        )
+      return response
 
-    except Exception as e:
-        logger.error(f"Lỗi khi insert issue hoặc sub_issue: {e}")
-        raise HTTPException(status_code=500, detail=f"Lỗi: {str(e)}")
 
-# Các hàm sinh slogan, content, ảnh và các API liên quan giữ nguyên, vì chúng không liên quan tới DB.
+    # 4.2.2 Nếu người dùng đã đăng nhập nhưng chưa có issue_id
+    if( user_id and not issue_id):
+      
+      # 4.2.2.1 FastAPI tạo bản ghi mới trong bảng issues với user_id và tiêu đề mặc định (INSERT INTO issues(user_id, title), nhận được issue_id). (prompt tương ứng với title trong DB)
+      issue =  create_issue(conn, user_id, prompt)
+      issue_id = issue.id
+    
+    # 4.2.2.2 FastAPI lưu prompt của người dùng vào bảng sub_issues với type=’text’, sender=’user’ và liên kết với issue_id (INSERT INTO sub_issues(prompt, type=’text’, sender=’user’).
+    create_sub_issue(conn, issue_id, prompt, "text", "user")
 
+    logger.debug(f"Prompt for content: {prompt}")
+
+    # 4.2.2.3 FastAPI gọi hàm xử lý tạo slogan
+    slogan = generate_slogan(prompt)
+
+    # 4.4.1 Nếu kết quả trả về ở bước 4.2.2.3 chứa chuỗi “Error” hoặc lỗi tương tự thì trả về 400 Bad Request và hiển thị thông báo lỗi lên trang index.html
+    if "Error"  in slogan:
+      response = Response(
+      code=400,
+      message='failed',
+      data={}
+    ) 
+      return response
+  
+    # 4.2.2.4 FastAPI lưu phản hồi từ hàm tạo nội dung vào bảng sub_issues với type phù hợp (text), sender=’bot’.
+    create_sub_issue(conn, issue_id, slogan, "text", "bot")
+    
+    # 4.2.2.5 FastAPI trả về kết quả nội dung slogan với status 200 OK và issue_id.
+    response = Response(
+        code=200,
+        message='success',
+        data={
+            "content": slogan,
+            "issue_id": issue_id
+        }
+    )
+    return response
+
+# API tạo content
+@app.post("/content/")
+async def generate_content_api(request: Request):
+    prompt =  request.prompt
+    user_id = request.user_id
+    issue_id = request.issue_id
+
+    conn = get_db_connection() 
+    issue : Issues
+
+    # 4.2.1 Nếu người dùng chưa đăng nhập và chưa có issue (user_id == null và issue_id == null)
+    if (not user_id and not issue_id):
+
+      # 4.2.1.1 Gọi hàm xử lý tạo content (nội dung)
+      content = generate_content(prompt)
+
+      # 4.4.1 Nếu kết quả trả về ở bước 4.2.1.1 chứa chuỗi “Error” hoặc lỗi tương tự thì trả về 400 Bad Request và hiển thị thông báo lỗi lên trang index.html
+      if "Error" in content:
+        response = Response(
+        code=400,
+        message='failed',
+        data={}
+        ) 
+        return response
+        
+      # 4.2.1.2 Trả về kết quả nội dung content với status 200 OK và issue_id trả về là null.
+      response = Response(
+        code=200,
+        message='success',
+        data={
+            "content": content,
+            "issue_id": None
+            }
+        )
+      return response
+
+    # 4.2.2 Nếu người dùng đã đăng nhập nhưng chưa có issue_id
+    if( user_id and not issue_id):
+      
+      # 4.2.2.1 FastAPI tạo bản ghi mới trong bảng issues với user_id và tiêu đề mặc định (INSERT INTO issues(user_id, title), nhận được issue_id). (prompt tương ứng với title trong DB)
+      issue =  create_issue(conn, user_id, prompt)
+      issue_id = issue.id
+      
+    logger.debug(f"Prompt for content: {prompt}")
+
+    # 4.2.2.2 FastAPI lưu prompt của người dùng vào bảng sub_issues với type=’text’, sender=’user’ và liên kết với issue_id (INSERT INTO sub_issues(prompt, type=’text’, sender=’user’).
+    create_sub_issue(conn, issue_id, prompt, "text", "user")
+    
+    # 4.2.2.3 FastAPI gọi hàm xử lý tạo content
+    content = generate_content(prompt)
+
+    # 4.4.1 Nếu kết quả trả về ở bước 4.2.2.3 chứa chuỗi “Error” hoặc lỗi tương tự thì trả về 400 Bad Request và hiển thị thông báo lỗi lên trang index.html
+    if "Error"  in content:
+        response = Response(
+        code=400,
+        message='failed',
+        data={}
+    ) 
+        return response
+    
+    # 4.2.2.4 FastAPI lưu phản hồi từ hàm tạo nội dung vào bảng sub_issues với type phù hợp (text), sender=’bot’.
+    create_sub_issue(conn, issue_id, content, "text", "bot")
+
+    # 4.2.2.5 FastAPI trả về kết quả nội dung content với status 200 OK và issue_id.
+    response = Response(
+        code=200,
+        message='success',
+        data={
+            "content": content,
+            "issue_id": issue_id
+        }
+    )
+    return response
+
+# API tạo ảnh
+@app.post("/image/")
+async def generate_image_api( request: Request):
+  
+    prompt =  request.prompt
+    user_id = request.user_id
+    issue_id = request.issue_id
+    conn = get_db_connection() 
+    issue : Issues
+
+
+    # 4.2.1 Nếu người dùng chưa đăng nhập và chưa có issue (user_id == null và issue_id == null)
+    if (not user_id and not issue_id):
+
+      # 4.2.1.1 Gọi hàm xử lý tạo image (hình ảnh)
+      url = generate_image(prompt)
+
+      # 4.4.1 Nếu kết quả trả về ở bước 4.2.1.1 chứa chuỗi “Error” hoặc lỗi tương tự thì trả về 400 Bad Request và hiển thị thông báo lỗi lên trang index.html
+      if "Error" in url:
+        response = Response(
+        code=400,
+        message='failed',
+        data={}
+        ) 
+        return response
+        
+      # 4.2.1.2 Trả về kết quả nội dung image với status 200 OK và issue_id trả về là null.
+      response = Response(
+        code=200,
+        message='success',
+        data={
+            "content": url,
+            "issue_id": None
+            }
+        )
+      return response
+
+    # 4.2.2 Nếu người dùng đã đăng nhập nhưng chưa có issue_id
+    if( user_id and not issue_id):
+      
+      # 4.2.2.1 FastAPI tạo bản ghi mới trong bảng issues với user_id và tiêu đề mặc định (INSERT INTO issues(user_id, title), nhận được issue_id). (prompt tương ứng với title trong DB)
+      issue =  create_issue(conn, user_id, prompt)
+      issue_id = issue.id
+    
+    # 4.2.2.2 FastAPI lưu prompt của người dùng vào bảng sub_issues với type=’text’, sender=’user’ và liên kết với issue_id (INSERT INTO sub_issues(prompt, type=’text’, sender=’user’).
+    create_sub_issue(conn, issue_id, prompt, "text", "user")
+
+    logger.debug(f"Prompt: {prompt}")
+
+    # 4.2.2.3 FastAPI gọi hàm xử lý tạo image
+    url = generate_image(prompt)
+
+    # 4.4.1 Nếu kết quả trả về ở bước 4.2.2.3 chứa chuỗi “Error” hoặc lỗi tương tự thì trả về 400 Bad Request và hiển thị thông báo lỗi lên trang index.html
+    if "Error" in url:
+            response = Response(
+            code=400,
+            message='failed',
+            data={}
+        ) 
+            return response
+        
+    # 4.2.2.4 FastAPI lưu phản hồi từ hàm tạo nội dung vào bảng sub_issues với type phù hợp (imageURL), sender=’bot’.
+    create_sub_issue(conn, issue_id, url, "text", "bot")
+
+    # 4.2.2.5 FastAPI trả về kết quả nội dung content với status 200 OK và issue_id.
+    response = Response(
+        code=200,
+        message='success',
+        data={
+            "content": url,
+            "issue_id": issue_id
+            }
+        )
+    return response
+
+#Hàm
 def generate_slogan(prompt: str) -> str:
     response = requests.post(
         url="https://openrouter.ai/api/v1/chat/completions",
@@ -206,7 +407,7 @@ def generate_slogan(prompt: str) -> str:
         result = response.json()
         return result["choices"][0]["message"]["content"]
     else:
-        return f"❌ Error {response.status_code}: {response.text}"
+        return f"Error {response.status_code}: {response.text}"
 
 
 # Hàm tạo content từ prompt
@@ -232,7 +433,7 @@ def generate_content(prompt: str) -> str:
         result = response.json()
         return result["choices"][0]["message"]["content"]
     else:
-        return f"❌ Error {response.status_code}: {response.text}"
+        return f"Error {response.status_code}: {response.text}"
 
 
 # Hàm upload ảnh base64 lên S3
@@ -283,36 +484,46 @@ def generate_image(prompt: str) -> str:
     else:
         return f"❌ Error {response.status_code}: {response.text}"
 
-# API test đơn giản
-@app.post("/test/")
-async def test_api():
-    return {"data": "Hello, I'm AImar "}
 
-# API tạo slogan
-@app.post("/slogan/")
-async def generate_slogan_api(request: Request):
-    prompt = request.prompt
-    slogan = generate_slogan(prompt)
-    if "Error" in slogan:
-        raise HTTPException(status_code=400, detail=slogan)
-    return {"data": slogan}
+def get_issues_by_user(conn, user_id: int) -> list[Issues]:
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT id, title, user_id
+            FROM issues
+            WHERE user_id = %s
+            ORDER BY created_at DESC
+            LIMIT 20
+        """, (user_id,))
+        results = cur.fetchall()
+        return [Issues(id=row[0], title=row[1], user_id=row[2]) for row in results]
 
-# API tạo content
-@app.post("/content/")
-async def generate_content_api(request: Request):
-    prompt = request.prompt
-    logger.debug(f"Prompt for content: {prompt}")
-    content = generate_content(prompt)
-    if "Error" in content:
-        raise HTTPException(status_code=400, detail=content)
-    return {"data": content}
 
-# API tạo ảnh
-@app.post("/image/")
-async def generate_image_api(request: Request):
-    prompt = request.prompt
-    logger.debug(f"Prompt: {prompt}")
-    response = generate_image(prompt)
-    if "Error" in response:
-        raise HTTPException(status_code=400, detail=response)
-    return {"data": response}
+def create_issue(conn, user_id: int, title: str = "New Conversation") -> Issues:
+    with conn.cursor() as cur:
+        cur.execute("""
+            INSERT INTO issues (title, user_id)
+            VALUES (%s, %s )
+            RETURNING id, title, user_id
+        """, (title, user_id))
+        result = cur.fetchone()
+        conn.commit()
+        return Issues(id=result[0], title=result[1], user_id=result[2])
+    
+
+
+def create_sub_issue(conn, issue_id: int, content: str, type_: str, owner: str) -> SubIssue:
+    with conn.cursor() as cur:
+        cur.execute("""
+            INSERT INTO sub_issues (content, issue_id, type, owner)
+            VALUES (%s, %s, %s, %s)
+            RETURNING id, content, issue_id, type, owner
+        """, (content, issue_id, type_, owner))
+        result = cur.fetchone()
+        conn.commit()
+        return SubIssue(
+            id=result[0],
+            content=result[1],
+            issue_id=result[2],
+            type=result[3],
+            owner=result[4]
+        )
